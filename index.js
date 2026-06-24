@@ -1,5 +1,11 @@
 require("dotenv").config();
 const { Client, GatewayIntentBits, EmbedBuilder } = require("discord.js");
+const {
+  inicializarDB,
+  getLeitor,
+  atualizarLeitor,
+  getRanking,
+} = require("./db");
 
 const client = new Client({
   intents: [
@@ -8,8 +14,6 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
   ],
 });
-
-const dados = {}; // { userId: { paginas: 0, streak: 0, ultimoDia: '' } }
 
 function gerarFloresta(paginas) {
   const arvores = Math.floor(paginas / 10);
@@ -26,12 +30,12 @@ function gerarFloresta(paginas) {
   return floresta;
 }
 
-client.on("clientReady", () => {
+client.on("clientReady", async () => {
+  await inicializarDB();
   console.log(`✅ TokoBot online como ${client.user.tag}`);
 });
 
 client.on("messageCreate", async (message) => {
-  console.log(`Mensagem recebida: ${message.content}`);
   if (message.author.bot) return;
 
   const conteudo = message.content.trim().toLowerCase();
@@ -39,47 +43,44 @@ client.on("messageCreate", async (message) => {
   const nome = message.member?.displayName || message.author.username;
   const hoje = new Date().toISOString().slice(0, 10);
 
-  // Inicializa usuário
-  if (!dados[userId]) {
-    dados[userId] = { paginas: 0, streak: 0, ultimoDia: "" };
-  }
-
-  const user = dados[userId];
-
-  // !li 30
   if (conteudo.startsWith("!li ")) {
     const partes = conteudo.split(" ");
-    const paginas = parseInt(partes[1]);
+    const paginasNovas = parseInt(partes[1]);
 
-    if (isNaN(paginas) || paginas <= 0) {
+    if (isNaN(paginasNovas) || paginasNovas <= 0) {
       return message.reply(
         "❌ Use assim: `!li 30` (número de páginas que você leu hoje)",
       );
     }
 
-    // Streak
-    if (user.ultimoDia === hoje) {
-      user.paginas += paginas;
+    const user = await getLeitor(userId, nome);
+    let { paginas, streak, ultimo_dia } = user;
+
+    const ontem = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+
+    if (ultimo_dia === hoje) {
+      paginas += paginasNovas;
     } else {
-      const ontem = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-      if (user.ultimoDia === ontem) {
-        user.streak += 1;
+      if (ultimo_dia === ontem) {
+        streak += 1;
       } else {
-        user.streak = 1;
+        streak = 1;
       }
-      user.paginas += paginas;
-      user.ultimoDia = hoje;
+      paginas += paginasNovas;
+      ultimo_dia = hoje;
     }
 
-    const floresta = gerarFloresta(user.paginas);
+    await atualizarLeitor(userId, paginas, streak, ultimo_dia);
+
+    const floresta = gerarFloresta(paginas);
 
     const embed = new EmbedBuilder()
       .setColor(0x2d6a4f)
-      .setTitle(`🌿 ${nome} leu ${paginas} páginas hoje!`)
+      .setTitle(`🌿 ${nome} leu ${paginasNovas} páginas hoje!`)
       .setDescription(`**Sua floresta:**\n${floresta}`)
       .addFields(
-        { name: "📚 Total de páginas", value: `${user.paginas}`, inline: true },
-        { name: "🔥 Streak", value: `${user.streak} dia(s)`, inline: true },
+        { name: "📚 Total de páginas", value: `${paginas}`, inline: true },
+        { name: "🔥 Streak", value: `${streak} dia(s)`, inline: true },
       )
       .setFooter({
         text: "Use !floresta para ver sua floresta a qualquer hora",
@@ -88,8 +89,8 @@ client.on("messageCreate", async (message) => {
     return message.reply({ embeds: [embed] });
   }
 
-  // !floresta
   if (conteudo === "!floresta") {
+    const user = await getLeitor(userId, nome);
     const floresta = gerarFloresta(user.paginas);
 
     const embed = new EmbedBuilder()
@@ -104,11 +105,8 @@ client.on("messageCreate", async (message) => {
     return message.reply({ embeds: [embed] });
   }
 
-  // !ranking
   if (conteudo === "!ranking") {
-    const ranking = Object.entries(dados)
-      .sort((a, b) => b[1].paginas - a[1].paginas)
-      .slice(0, 5);
+    const ranking = await getRanking();
 
     if (ranking.length === 0) {
       return message.reply(
@@ -120,10 +118,7 @@ client.on("messageCreate", async (message) => {
     let lista = "";
 
     for (let i = 0; i < ranking.length; i++) {
-      const [id, info] = ranking[i];
-      const membro = await message.guild.members.fetch(id).catch(() => null);
-      const nomeMembro = membro ? membro.user.username : "Leitor";
-      lista += `${medalhas[i]} **${nomeMembro}** — ${info.paginas} páginas\n`;
+      lista += `${medalhas[i]} **${ranking[i].nome}** — ${ranking[i].paginas} páginas\n`;
     }
 
     const embed = new EmbedBuilder()
@@ -134,7 +129,6 @@ client.on("messageCreate", async (message) => {
     return message.reply({ embeds: [embed] });
   }
 
-  // !ajuda
   if (conteudo === "!ajuda") {
     const embed = new EmbedBuilder()
       .setColor(0x2d6a4f)
