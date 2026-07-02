@@ -119,16 +119,18 @@ function fullTreeSvg() {
     </linearGradient>
   </defs>
   <ellipse cx="110" cy="238" rx="54" ry="18" fill="#123c2a" opacity="0.26"/>
-  <rect x="95" y="140" width="30" height="92" rx="8" fill="url(#trunk)"/>
-  <path d="M100 145H125V160C115 165 105 164 95 158Z" fill="#6f4312" opacity="0.36"/>
-  <path d="M110 8L160 86L128 103H92L60 86Z" fill="url(#leaf1)"/>
-  <path d="M110 62L181 154L138 178H82L39 154Z" fill="url(#leaf2)"/>
-  <path d="M110 120L199 218L145 244H75L21 218Z" fill="url(#leaf3)"/>
-  <path d="M110 8L160 86L118 80Z" fill="#d6ff58" opacity="0.3"/>
-  <path d="M110 62L181 154L123 139Z" fill="#b3ef45" opacity="0.26"/>
-  <path d="M110 120L199 218L126 199Z" fill="#8bdd3e" opacity="0.22"/>
-  <path d="M60 86L92 103H128L160 86L128 120H92Z" fill="#3a8f1e" opacity="0.22"/>
-  <path d="M39 154L82 178H138L181 154L138 202H82Z" fill="#217719" opacity="0.2"/>
+  <rect x="96" y="123" width="28" height="112" rx="8" fill="url(#trunk)"/>
+  <path d="M101 128H124V144C115 150 105 149 96 142Z" fill="#6f4312" opacity="0.34"/>
+  <path d="M110 118L184 192L142 216H78L36 192Z" fill="url(#leaf3)"/>
+  <path d="M110 73L170 143L135 164H85L50 143Z" fill="url(#leaf2)"/>
+  <path d="M110 24L152 84L128 101H92L68 84Z" fill="url(#leaf1)"/>
+  <path d="M110 118L184 192L123 180Z" fill="#8bdd3e" opacity="0.22"/>
+  <path d="M110 73L170 143L122 132Z" fill="#b3ef45" opacity="0.26"/>
+  <path d="M110 24L152 84L118 79Z" fill="#d6ff58" opacity="0.3"/>
+  <path d="M36 192L78 216H142L184 192L142 228H78Z" fill="#217719" opacity="0.18"/>
+  <path d="M50 143L85 164H135L170 143L135 176H85Z" fill="#2d841b" opacity="0.18"/>
+  <rect x="98" y="207" width="24" height="32" rx="7" fill="url(#trunk)"/>
+  <path d="M101 210H121V222C114 226 106 226 99 221Z" fill="#b97820" opacity="0.4"/>
 </svg>`;
 }
 
@@ -136,11 +138,13 @@ function youngTreeSvg() {
   return `
 <svg width="190" height="235" viewBox="0 0 190 235" fill="none" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="95" cy="207" rx="44" ry="15" fill="#123c2a" opacity="0.23"/>
-  <rect x="82" y="122" width="26" height="80" rx="7" fill="#8f5a18"/>
-  <path d="M95 20L144 94L115 111H75L46 94Z" fill="#8bd73a"/>
-  <path d="M95 76L166 166L123 191H67L24 166Z" fill="#3f9e22"/>
-  <path d="M95 20L144 94L104 87Z" fill="#c5f34d" opacity="0.34"/>
-  <path d="M24 166L67 191H123L166 166L123 211H67Z" fill="#237b1b" opacity="0.2"/>
+  <rect x="83" y="100" width="24" height="106" rx="7" fill="#8f5a18"/>
+  <path d="M95 81L153 151L120 174H70L37 151Z" fill="#3f9e22"/>
+  <path d="M95 30L138 90L113 108H77L52 90Z" fill="#8bd73a"/>
+  <path d="M95 81L153 151L108 142Z" fill="#86da38" opacity="0.22"/>
+  <path d="M95 30L138 90L104 84Z" fill="#c5f34d" opacity="0.34"/>
+  <path d="M37 151L70 174H120L153 151L120 190H70Z" fill="#237b1b" opacity="0.2"/>
+  <rect x="85" y="174" width="20" height="36" rx="6" fill="#8f5a18"/>
 </svg>`;
 }
 
@@ -148,10 +152,12 @@ function saplingSvg() {
   return `
 <svg width="150" height="190" viewBox="0 0 150 190" fill="none" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="75" cy="164" rx="35" ry="12" fill="#123c2a" opacity="0.2"/>
-  <rect x="66" y="95" width="18" height="64" rx="6" fill="#8f5a18"/>
-  <path d="M75 28L119 99L91 118H59L31 99Z" fill="#8edc3d"/>
-  <path d="M75 78L134 148L99 170H51L16 148Z" fill="#3f9e22"/>
-  <path d="M75 28L119 99L83 91Z" fill="#c7f653" opacity="0.34"/>
+  <rect x="67" y="77" width="16" height="88" rx="6" fill="#8f5a18"/>
+  <path d="M75 72L124 132L96 151H54L26 132Z" fill="#3f9e22"/>
+  <path d="M75 31L110 82L90 98H60L40 82Z" fill="#8edc3d"/>
+  <path d="M75 72L124 132L86 124Z" fill="#86da38" opacity="0.22"/>
+  <path d="M75 31L110 82L83 77Z" fill="#c7f653" opacity="0.34"/>
+  <rect x="68" y="143" width="14" height="27" rx="5" fill="#8f5a18"/>
 </svg>`;
 }
 

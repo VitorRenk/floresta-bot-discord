@@ -196,7 +196,6 @@ function getBackgroundSvg() {
   </defs>
   <rect width="${IMAGE_SIZE}" height="${IMAGE_SIZE}" fill="url(#glow)"/>
   <rect width="${IMAGE_SIZE}" height="${IMAGE_SIZE}" filter="url(#grain)" opacity="0.28"/>
-  <ellipse cx="512" cy="812" rx="370" ry="46" fill="#09271f" opacity="0.28"/>
 </svg>`;
 }
 
