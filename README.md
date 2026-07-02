@@ -8,6 +8,7 @@ O bot responde a comandos no Discord para:
 
 - `!li [páginas]` → registra páginas lidas no dia
 - `!floresta` → mostra a sua floresta atual
+- `!resetar` → zera suas páginas lidas sem alterar seu streak
 - `!ranking` → exibe os top 5 leitores
 - `!ajuda` → mostra os comandos disponíveis
 

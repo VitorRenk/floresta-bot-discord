@@ -4,6 +4,7 @@ const {
   inicializarDB,
   getLeitor,
   atualizarLeitor,
+  resetarPaginasLeitor,
   getRanking,
 } = require("./db");
 
@@ -105,6 +106,30 @@ client.on("messageCreate", async (message) => {
     return message.reply({ embeds: [embed] });
   }
 
+  if (conteudo === "!resetar") {
+    const user = await getLeitor(userId, nome);
+
+    if (user.paginas === 0) {
+      return message.reply("Você ainda não tem páginas para resetar.");
+    }
+
+    await resetarPaginasLeitor(userId);
+
+    const embed = new EmbedBuilder()
+      .setColor(0x2d6a4f)
+      .setTitle(`Páginas de ${nome} resetadas!`)
+      .setDescription("Seu total de páginas voltou para 0.")
+      .addFields(
+        { name: "Total de páginas", value: "0", inline: true },
+        { name: "Streak", value: `${user.streak} dia(s)`, inline: true },
+      )
+      .setFooter({
+        text: "Seu streak e seu último dia lido foram preservados.",
+      });
+
+    return message.reply({ embeds: [embed] });
+  }
+
   if (conteudo === "!ranking") {
     const ranking = await getRanking();
 
@@ -139,6 +164,10 @@ client.on("messageCreate", async (message) => {
           value: "Registra páginas lidas hoje. Ex: `!li 30`",
         },
         { name: "!floresta", value: "Veja sua floresta atual" },
+        {
+          name: "!resetar",
+          value: "Zera suas páginas lidas sem alterar seu streak",
+        },
         { name: "!ranking", value: "Top 5 leitores do servidor" },
         { name: "!ajuda", value: "Mostra essa mensagem" },
       );

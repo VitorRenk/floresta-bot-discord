@@ -50,6 +50,12 @@ async function atualizarLeitor(userId, paginas, streak, ultimoDia) {
   );
 }
 
+async function resetarPaginasLeitor(userId) {
+  await pool.query("UPDATE leitores SET paginas = 0 WHERE user_id = $1", [
+    userId,
+  ]);
+}
+
 async function getRanking() {
   const res = await pool.query(
     "SELECT * FROM leitores ORDER BY paginas DESC LIMIT 5",
@@ -57,4 +63,10 @@ async function getRanking() {
   return res.rows;
 }
 
-module.exports = { inicializarDB, getLeitor, atualizarLeitor, getRanking };
+module.exports = {
+  inicializarDB,
+  getLeitor,
+  atualizarLeitor,
+  resetarPaginasLeitor,
+  getRanking,
+};
