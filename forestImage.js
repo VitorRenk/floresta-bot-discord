@@ -97,10 +97,10 @@ async function createPlantComposite(spritePath, point, index, stageScale = 1) {
 
 function getStageScale(stage) {
   const scales = {
-    seed: 0.56,
-    sprout: 0.72,
-    sapling: 0.86,
-    young: 0.94,
+    seed: 0.44,
+    sprout: 0.58,
+    sapling: 0.74,
+    young: 0.86,
   };
   return scales[stage] || 1;
 }
@@ -157,8 +157,9 @@ function getGridPoint(row, col) {
   const top = { x: 512, y: 206 };
   const right = { x: 898, y: 432 };
   const left = { x: 126, y: 432 };
-  const colAmount = (col + 0.5) / GRID_DIVISIONS;
-  const rowAmount = (row + 0.5) / GRID_DIVISIONS;
+  const inset = 0.065;
+  const colAmount = inset + ((col + 0.5) / GRID_DIVISIONS) * (1 - inset * 2);
+  const rowAmount = inset + ((row + 0.5) / GRID_DIVISIONS) * (1 - inset * 2);
   const x =
     top.x +
     (right.x - top.x) * colAmount +
@@ -168,7 +169,9 @@ function getGridPoint(row, col) {
     (right.y - top.y) * colAmount +
     (left.y - top.y) * rowAmount;
   const depth = row + col;
-  const size = Math.max(124, 164 - depth * 4);
+  const edgeDistance = Math.min(row, col, GRID_DIVISIONS - 1 - row, GRID_DIVISIONS - 1 - col);
+  const edgeScale = edgeDistance === 0 ? 0.84 : edgeDistance === 1 ? 0.94 : 1;
+  const size = Math.max(112, Math.round((164 - depth * 4) * edgeScale));
 
   return {
     x: Math.round(x),

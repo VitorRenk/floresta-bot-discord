@@ -2,6 +2,10 @@
 
 TokoBot é um bot para Discord que ajuda a registrar páginas lidas e transforma esse hábito em uma floresta visual.
 
+## Exemplo da floresta
+
+![Floresta com 500 paginas lidas](assets/readme/forest-500.png)
+
 ## O que o bot faz
 
 O bot responde a comandos no Discord para:
