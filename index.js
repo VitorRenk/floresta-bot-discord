@@ -1,5 +1,15 @@
 require("dotenv").config();
-const { Client, GatewayIntentBits, EmbedBuilder } = require("discord.js");
+const {
+  AttachmentBuilder,
+  Client,
+  EmbedBuilder,
+  GatewayIntentBits,
+} = require("discord.js");
+const {
+  TREE_PAGE_GOAL,
+  generateForestImage,
+  getForestProgress,
+} = require("./forestImage");
 const {
   inicializarDB,
   getLeitor,
@@ -16,19 +26,41 @@ const client = new Client({
   ],
 });
 
-function gerarFloresta(paginas) {
-  const arvores = Math.floor(paginas / 10);
-  const mudas = Math.floor((paginas % 10) / 3);
-  const sementes = paginas % 3;
+function formatForestProgress(progress) {
+  if (progress.remainingPages === 0) {
+    return progress.completeTrees > 0
+      ? "Próxima árvore: 0%"
+      : `Próxima árvore: 0/${TREE_PAGE_GOAL} páginas`;
+  }
 
-  let floresta = "";
-  floresta += "🌳".repeat(arvores);
-  floresta += "🌱".repeat(mudas);
-  floresta += "🌰".repeat(sementes);
+  return `Próxima árvore: ${progress.remainingPages}/${TREE_PAGE_GOAL} páginas (${progress.nextTreeProgress}%)`;
+}
 
-  if (floresta === "")
-    floresta = "🪨 (leia páginas para crescer sua floresta!)";
-  return floresta;
+async function criarRespostaFloresta(user, nome) {
+  const progress = getForestProgress(user.paginas);
+  const image = await generateForestImage(user.paginas);
+  const attachment = new AttachmentBuilder(image, { name: "floresta.png" });
+
+  const embed = new EmbedBuilder()
+    .setColor(0x2d6a4f)
+    .setTitle(`🌲 Floresta de ${nome}`)
+    .setImage("attachment://floresta.png")
+    .addFields(
+      { name: "📚 Total de páginas", value: `${user.paginas}`, inline: true },
+      {
+        name: "🌲 Árvores completas",
+        value: `${progress.completeTrees}`,
+        inline: true,
+      },
+      {
+        name: "🌱 Crescimento",
+        value: formatForestProgress(progress),
+        inline: false,
+      },
+      { name: "🔥 Streak", value: `${user.streak} dia(s)`, inline: true },
+    );
+
+  return { embeds: [embed], files: [attachment] };
 }
 
 client.on("clientReady", async () => {
@@ -73,37 +105,27 @@ client.on("messageCreate", async (message) => {
 
     await atualizarLeitor(userId, paginas, streak, ultimo_dia);
 
-    const floresta = gerarFloresta(paginas);
-
+    const progress = getForestProgress(paginas);
     const embed = new EmbedBuilder()
       .setColor(0x2d6a4f)
       .setTitle(`🌿 ${nome} leu ${paginasNovas} páginas hoje!`)
-      .setDescription(`**Sua floresta:**\n${floresta}`)
+      .setDescription("Use `!floresta` para ver sua floresta visual atualizada.")
       .addFields(
         { name: "📚 Total de páginas", value: `${paginas}`, inline: true },
+        {
+          name: "🌲 Árvores completas",
+          value: `${progress.completeTrees}`,
+          inline: true,
+        },
         { name: "🔥 Streak", value: `${streak} dia(s)`, inline: true },
-      )
-      .setFooter({
-        text: "Use !floresta para ver sua floresta a qualquer hora",
-      });
+      );
 
     return message.reply({ embeds: [embed] });
   }
 
   if (conteudo === "!floresta") {
     const user = await getLeitor(userId, nome);
-    const floresta = gerarFloresta(user.paginas);
-
-    const embed = new EmbedBuilder()
-      .setColor(0x2d6a4f)
-      .setTitle(`🌳 Floresta de ${nome}`)
-      .setDescription(floresta)
-      .addFields(
-        { name: "📚 Total de páginas", value: `${user.paginas}`, inline: true },
-        { name: "🔥 Streak", value: `${user.streak} dia(s)`, inline: true },
-      );
-
-    return message.reply({ embeds: [embed] });
+    return message.reply(await criarRespostaFloresta(user, nome));
   }
 
   if (conteudo === "!resetar") {
@@ -163,7 +185,10 @@ client.on("messageCreate", async (message) => {
           name: "!li [páginas]",
           value: "Registra páginas lidas hoje. Ex: `!li 30`",
         },
-        { name: "!floresta", value: "Veja sua floresta atual" },
+        {
+          name: "!floresta",
+          value: "Mostra sua floresta visual gerada pelas páginas lidas",
+        },
         {
           name: "!resetar",
           value: "Zera suas páginas lidas sem alterar seu streak",
