@@ -14,6 +14,8 @@ const {
   inicializarDB,
   getLeitor,
   atualizarLeitor,
+  registrarPaginasDia,
+  getPaginasPeriodo,
   resetarPaginasLeitor,
   getRanking,
 } = require("./db");
@@ -26,6 +28,52 @@ const client = new Client({
   ],
 });
 
+const BOT_TIME_ZONE = "America/Sao_Paulo";
+
+function getTodayDateString() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: BOT_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(
+    parts.map((part) => [part.type, part.value]),
+  );
+
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function addDaysToDateString(dateString, days) {
+  const [year, month, day] = dateString.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day + days));
+  return date.toISOString().slice(0, 10);
+}
+
+function getWeekPeriod(dateString) {
+  const [year, month, day] = dateString.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  const start = addDaysToDateString(dateString, -date.getUTCDay());
+
+  return {
+    start,
+    end: addDaysToDateString(start, 6),
+  };
+}
+
+function getMonthPeriod(dateString) {
+  const [year, month] = dateString.split("-").map(Number);
+  const start = `${dateString.slice(0, 7)}-01`;
+  const end = new Date(Date.UTC(year, month, 0)).toISOString().slice(0, 10);
+
+  return { start, end };
+}
+
+function formatDateBR(dateString) {
+  const [year, month, day] = dateString.split("-");
+  return `${day}/${month}/${year}`;
+}
+
 function formatForestProgress(progress) {
   if (progress.remainingPages === 0) {
     return progress.completeTrees > 0
@@ -36,17 +84,21 @@ function formatForestProgress(progress) {
   return `Próxima árvore: ${progress.remainingPages}/${TREE_PAGE_GOAL} páginas (${progress.nextTreeProgress}%)`;
 }
 
-async function criarRespostaFloresta(user, nome, userId) {
-  const progress = getForestProgress(user.paginas);
-  const image = await generateForestImage(user.paginas, userId);
+async function criarRespostaFlorestaPeriodo(user, nome, userId, periodo, tipo) {
+  const paginas = await getPaginasPeriodo(userId, periodo.start, periodo.end);
+  const progress = getForestProgress(paginas);
+  const image = await generateForestImage(paginas, userId);
   const attachment = new AttachmentBuilder(image, { name: "floresta.png" });
+  const periodoTexto = `${formatDateBR(periodo.start)} a ${formatDateBR(periodo.end)}`;
+  const periodoNome = tipo === "semana" ? "Semana" : "Mês";
 
   const embed = new EmbedBuilder()
     .setColor(0x2d6a4f)
-    .setTitle(`🌲 Floresta de ${nome}`)
+    .setTitle(`🌲 Floresta de ${nome} - ${periodoNome}`)
+    .setDescription(periodoTexto)
     .setImage("attachment://floresta.png")
     .addFields(
-      { name: "📚 Total de páginas", value: `${user.paginas}`, inline: true },
+      { name: "📚 Páginas no período", value: `${paginas}`, inline: true },
       {
         name: "🌲 Árvores completas",
         value: `${progress.completeTrees}`,
@@ -74,7 +126,7 @@ client.on("messageCreate", async (message) => {
   const conteudo = message.content.trim().toLowerCase();
   const userId = message.author.id;
   const nome = message.member?.displayName || message.author.username;
-  const hoje = new Date().toISOString().slice(0, 10);
+  const hoje = getTodayDateString();
 
   if (conteudo.startsWith("!li ")) {
     const partes = conteudo.split(" ");
@@ -89,7 +141,7 @@ client.on("messageCreate", async (message) => {
     const user = await getLeitor(userId, nome);
     let { paginas, streak, ultimo_dia } = user;
 
-    const ontem = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const ontem = addDaysToDateString(hoje, -1);
 
     if (ultimo_dia === hoje) {
       paginas += paginasNovas;
@@ -104,12 +156,15 @@ client.on("messageCreate", async (message) => {
     }
 
     await atualizarLeitor(userId, paginas, streak, ultimo_dia);
+    await registrarPaginasDia(userId, hoje, paginasNovas);
 
     const progress = getForestProgress(paginas);
     const embed = new EmbedBuilder()
       .setColor(0x2d6a4f)
       .setTitle(`🌿 ${nome} leu ${paginasNovas} páginas hoje!`)
-      .setDescription("Use `!floresta` para ver sua floresta visual atualizada.")
+      .setDescription(
+        "Use `!floresta-semana` ou `!floresta-mes` para ver sua floresta visual atualizada.",
+      )
       .addFields(
         { name: "📚 Total de páginas", value: `${paginas}`, inline: true },
         {
@@ -123,9 +178,26 @@ client.on("messageCreate", async (message) => {
     return message.reply({ embeds: [embed] });
   }
 
-  if (conteudo === "!floresta") {
+  if (conteudo === "!floresta-semana") {
     const user = await getLeitor(userId, nome);
-    return message.reply(await criarRespostaFloresta(user, nome, userId));
+    const periodo = getWeekPeriod(hoje);
+    return message.reply(
+      await criarRespostaFlorestaPeriodo(user, nome, userId, periodo, "semana"),
+    );
+  }
+
+  if (conteudo === "!floresta-mes" || conteudo === "!floresta-mês") {
+    const user = await getLeitor(userId, nome);
+    const periodo = getMonthPeriod(hoje);
+    return message.reply(
+      await criarRespostaFlorestaPeriodo(user, nome, userId, periodo, "mes"),
+    );
+  }
+
+  if (conteudo === "!floresta") {
+    return message.reply(
+      "O comando `!floresta` foi dividido em `!floresta-semana` e `!floresta-mes`.",
+    );
   }
 
   if (conteudo === "!resetar") {
@@ -186,8 +258,12 @@ client.on("messageCreate", async (message) => {
           value: "Registra páginas lidas hoje. Ex: `!li 30`",
         },
         {
-          name: "!floresta",
-          value: "Mostra sua floresta visual gerada pelas páginas lidas",
+          name: "!floresta-semana",
+          value: "Mostra sua floresta da semana atual, de domingo a sábado",
+        },
+        {
+          name: "!floresta-mes",
+          value: "Mostra sua floresta do mês atual",
         },
         {
           name: "!resetar",

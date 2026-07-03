@@ -14,6 +14,18 @@ const pool = new Pool({
 
 async function inicializarDB() {
   await pool.query(`
+    CREATE TABLE IF NOT EXISTS leituras_diarias (
+      user_id TEXT NOT NULL,
+      data TEXT NOT NULL,
+      paginas INTEGER DEFAULT 0,
+      PRIMARY KEY (user_id, data)
+    )
+  `);
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_leituras_diarias_user_data
+    ON leituras_diarias (user_id, data)
+  `);
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS leitores (
       user_id TEXT PRIMARY KEY,
       nome TEXT,
@@ -50,8 +62,38 @@ async function atualizarLeitor(userId, paginas, streak, ultimoDia) {
   );
 }
 
+async function registrarPaginasDia(userId, data, paginas) {
+  await pool.query(
+    `
+    INSERT INTO leituras_diarias (user_id, data, paginas)
+    VALUES ($1, $2, $3)
+    ON CONFLICT (user_id, data)
+    DO UPDATE SET paginas = leituras_diarias.paginas + EXCLUDED.paginas
+  `,
+    [userId, data, paginas],
+  );
+}
+
+async function getPaginasPeriodo(userId, dataInicio, dataFim) {
+  const res = await pool.query(
+    `
+    SELECT COALESCE(SUM(paginas), 0)::INTEGER AS paginas
+    FROM leituras_diarias
+    WHERE user_id = $1
+      AND data >= $2
+      AND data <= $3
+  `,
+    [userId, dataInicio, dataFim],
+  );
+
+  return res.rows[0].paginas;
+}
+
 async function resetarPaginasLeitor(userId) {
   await pool.query("UPDATE leitores SET paginas = 0 WHERE user_id = $1", [
+    userId,
+  ]);
+  await pool.query("DELETE FROM leituras_diarias WHERE user_id = $1", [
     userId,
   ]);
 }
@@ -67,6 +109,8 @@ module.exports = {
   inicializarDB,
   getLeitor,
   atualizarLeitor,
+  registrarPaginasDia,
+  getPaginasPeriodo,
   resetarPaginasLeitor,
   getRanking,
 };

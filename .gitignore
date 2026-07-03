@@ -17,8 +17,12 @@ logs/
 coverage/
 .nyc_output/
 
+# Arquivos temporarios e previews locais
+tmp/
+
 # Cache
 .cache/
+.eslintcache
 
 # IDEs e editores
 .vscode/
