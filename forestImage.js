@@ -3,7 +3,7 @@ const sharp = require("sharp");
 
 const TREE_PAGE_GOAL = 50;
 const IMAGE_SIZE = 1024;
-const VIEWPORT_CROP_SIZE = 880;
+const VIEWPORT_CROP_SIZE = 650;
 const VIEWPORT_CROP_OFFSET = Math.round((IMAGE_SIZE - VIEWPORT_CROP_SIZE) / 2);
 const ASSET_DIR = path.join(__dirname, "assets", "forest");
 const ISLAND_LEFT = 62;
