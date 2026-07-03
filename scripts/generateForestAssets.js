@@ -55,19 +55,67 @@ function islandSvg() {
       }).join("")}
     </g>
 
-    <g stroke="#6cb833" stroke-width="6" stroke-linecap="round" opacity="0.55">
-      <path d="M175 247C185 231 195 231 205 247"/>
-      <path d="M300 205C310 189 320 189 330 205"/>
-      <path d="M455 165C465 149 475 149 485 165"/>
-      <path d="M570 226C580 210 590 210 600 226"/>
-      <path d="M692 276C702 260 712 260 722 276"/>
-      <path d="M388 296C398 280 408 280 418 296"/>
-      <path d="M510 355C520 339 530 339 540 355"/>
-      <path d="M275 347C285 331 295 331 305 347"/>
-      <path d="M630 332C640 316 650 316 660 332"/>
-    </g>
+    ${grassDetails()}
   </g>
 </svg>`;
+}
+
+function grassDetails() {
+  const tufts = [
+    [450, 102, 0.58], [397, 131, 0.56], [501, 132, 0.62],
+    [350, 164, 0.68], [446, 170, 0.58], [552, 166, 0.64],
+    [298, 198, 0.62], [389, 208, 0.72], [488, 211, 0.58], [603, 205, 0.68],
+    [236, 232, 0.7], [330, 244, 0.56], [438, 249, 0.68], [540, 246, 0.58], [660, 237, 0.72],
+    [166, 272, 0.66], [260, 280, 0.76], [368, 292, 0.58], [468, 287, 0.7], [586, 284, 0.58], [724, 270, 0.64],
+    [213, 314, 0.58], [316, 326, 0.72], [421, 336, 0.62], [528, 328, 0.76], [643, 320, 0.58],
+    [270, 360, 0.66], [375, 374, 0.58], [480, 374, 0.74], [594, 362, 0.64],
+    [338, 412, 0.62], [450, 421, 0.72], [558, 410, 0.58],
+    [411, 112, 0.44], [472, 123, 0.48], [323, 183, 0.46], [522, 188, 0.46],
+    [205, 254, 0.5], [304, 267, 0.44], [404, 270, 0.5], [508, 268, 0.46], [618, 260, 0.5],
+    [247, 337, 0.46], [354, 350, 0.5], [455, 354, 0.44], [560, 347, 0.5], [671, 336, 0.46],
+    [313, 390, 0.5], [410, 399, 0.44], [506, 399, 0.5],
+    [430, 153, 0.42], [532, 151, 0.46], [362, 222, 0.44], [472, 231, 0.42],
+    [574, 247, 0.44], [240, 303, 0.42], [386, 318, 0.46], [536, 308, 0.42],
+    [614, 340, 0.44], [342, 432, 0.42], [482, 437, 0.44],
+  ];
+
+  const softStrokes = [
+    [450, 145, 22], [375, 178, 18], [515, 179, 20], [284, 221, 18], [434, 229, 20],
+    [586, 224, 18], [214, 294, 20], [350, 307, 22], [492, 303, 18], [640, 294, 20],
+    [292, 354, 18], [438, 365, 22], [582, 354, 18], [380, 434, 20], [520, 430, 18],
+  ];
+
+  const tuftPaths = tufts.map(([x, y, scale], index) => {
+    const color = index % 3 === 0 ? "#5da832" : index % 3 === 1 ? "#73bd34" : "#8acb43";
+    const width = (3.6 + (index % 2) * 0.8).toFixed(1);
+    const left = coord(x - 8 * scale);
+    const right = coord(x + 8 * scale);
+    const center = coord(x);
+    const yBase = coord(y);
+    const yLeftTop = coord(y - 11 * scale);
+    const yCenterTop = coord(y - 15 * scale);
+    const yRightTop = coord(y - 10 * scale);
+    return `<g stroke="${color}" stroke-width="${width}" stroke-linecap="round" opacity="0.72">
+      <path d="M${left} ${yBase}C${coord(x - 7 * scale)} ${coord(y - 6 * scale)} ${coord(x - 3 * scale)} ${yLeftTop} ${center} ${coord(y - 3 * scale)}"/>
+      <path d="M${center} ${yBase}C${coord(x - 1 * scale)} ${coord(y - 7 * scale)} ${coord(x + 2 * scale)} ${yCenterTop} ${coord(x + 3 * scale)} ${coord(y - 2 * scale)}"/>
+      <path d="M${coord(x + 4 * scale)} ${yBase}C${coord(x + 6 * scale)} ${coord(y - 5 * scale)} ${coord(x + 10 * scale)} ${yRightTop} ${right} ${coord(y - 2 * scale)}"/>
+    </g>`;
+  }).join("");
+
+  const strokePaths = softStrokes.map(([x, y, width], index) => {
+    const color = index % 2 === 0 ? "#c8f765" : "#8ed64b";
+    return `<path d="M${x - width} ${y}C${x - Math.round(width / 2)} ${y - 5} ${x + Math.round(width / 2)} ${y - 5} ${x + width} ${y}" stroke="${color}" stroke-width="3" stroke-linecap="round" opacity="0.3"/>`;
+  }).join("");
+
+  return `
+    <g>
+      ${strokePaths}
+      ${tuftPaths}
+    </g>`;
+}
+
+function coord(value) {
+  return Number(value.toFixed(1));
 }
 
 function gridLines(divisions) {
