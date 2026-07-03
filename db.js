@@ -98,9 +98,24 @@ async function resetarPaginasLeitor(userId) {
   ]);
 }
 
-async function getRanking() {
+async function getRankingMensal(dataInicio, dataFim) {
   const res = await pool.query(
-    "SELECT * FROM leitores ORDER BY paginas DESC LIMIT 5",
+    `
+    SELECT
+      leitores.user_id,
+      leitores.nome,
+      COALESCE(SUM(leituras_diarias.paginas), 0)::INTEGER AS paginas
+    FROM leitores
+    INNER JOIN leituras_diarias
+      ON leituras_diarias.user_id = leitores.user_id
+    WHERE leituras_diarias.data >= $1
+      AND leituras_diarias.data <= $2
+    GROUP BY leitores.user_id, leitores.nome
+    HAVING COALESCE(SUM(leituras_diarias.paginas), 0) > 0
+    ORDER BY paginas DESC
+    LIMIT 5
+  `,
+    [dataInicio, dataFim],
   );
   return res.rows;
 }
@@ -112,5 +127,5 @@ module.exports = {
   registrarPaginasDia,
   getPaginasPeriodo,
   resetarPaginasLeitor,
-  getRanking,
+  getRankingMensal,
 };

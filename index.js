@@ -17,7 +17,7 @@ const {
   registrarPaginasDia,
   getPaginasPeriodo,
   resetarPaginasLeitor,
-  getRanking,
+  getRankingMensal,
 } = require("./db");
 
 const client = new Client({
@@ -225,11 +225,12 @@ client.on("messageCreate", async (message) => {
   }
 
   if (conteudo === "!ranking") {
-    const ranking = await getRanking();
+    const periodo = getMonthPeriod(hoje);
+    const ranking = await getRankingMensal(periodo.start, periodo.end);
 
     if (ranking.length === 0) {
       return message.reply(
-        "Ninguém registrou páginas ainda! Use `!li 30` para começar.",
+        "Ninguém registrou páginas neste mês ainda! Use `!li 30` para começar.",
       );
     }
 
@@ -242,8 +243,11 @@ client.on("messageCreate", async (message) => {
 
     const embed = new EmbedBuilder()
       .setColor(0x2d6a4f)
-      .setTitle("🏆 Ranking de Leitores")
-      .setDescription(lista);
+      .setTitle("🏆 Ranking Mensal de Leitores")
+      .setDescription(lista)
+      .setFooter({
+        text: `Período: ${formatDateBR(periodo.start)} a ${formatDateBR(periodo.end)}`,
+      });
 
     return message.reply({ embeds: [embed] });
   }
@@ -269,7 +273,7 @@ client.on("messageCreate", async (message) => {
           name: "!resetar",
           value: "Zera suas páginas lidas sem alterar seu streak",
         },
-        { name: "!ranking", value: "Top 5 leitores do servidor" },
+        { name: "!ranking", value: "Top 5 leitores do mês atual" },
         { name: "!ajuda", value: "Mostra essa mensagem" },
       );
 

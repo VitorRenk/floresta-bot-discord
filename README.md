@@ -15,7 +15,7 @@ Com 525 páginas no período, o usuário tem **10 árvores completas** e mais **
 - Registro diário de páginas lidas com `!li`.
 - Floresta visual semanal com `!floresta-semana`.
 - Floresta visual mensal com `!floresta-mes`.
-- Ranking dos leitores com mais páginas acumuladas.
+- Ranking mensal dos leitores com mais páginas no mês atual.
 - Reset individual de páginas com preservação de streak e último dia lido.
 - Imagens PNG geradas dinamicamente com `sharp` e enviadas no Discord como anexo do embed.
 - Sprites locais para ilha, macieira, pinheiro, carvalho e estágios de crescimento.
@@ -29,7 +29,7 @@ Com 525 páginas no período, o usuário tem **10 árvores completas** e mais **
 - A floresta do mês usa o mês atual.
 - A aparência das árvores é pseudoaleatória e estável por usuário, então a floresta não muda de forma a cada chamada.
 - O bot salva um histórico diário em `leituras_diarias` para calcular semana e mês.
-- O total acumulado em `leitores.paginas` continua sendo usado pelo ranking.
+- O ranking usa o mesmo período de `!floresta-mes`, incentivando uma nova disputa a cada mês.
 
 ## Comandos
 
@@ -38,7 +38,7 @@ Com 525 páginas no período, o usuário tem **10 árvores completas** e mais **
 | `!li [páginas]` | Registra páginas lidas hoje. Exemplo: `!li 30` |
 | `!floresta-semana` | Mostra sua floresta da semana atual, de domingo a sábado |
 | `!floresta-mes` | Mostra sua floresta do mês atual |
-| `!ranking` | Exibe os 5 leitores com mais páginas acumuladas |
+| `!ranking` | Exibe os 5 leitores com mais páginas no mês atual |
 | `!resetar` | Zera suas páginas e histórico diário, sem alterar streak e último dia lido |
 | `!ajuda` | Mostra os comandos disponíveis |
 
@@ -55,7 +55,7 @@ Ele pode ser usado para:
 - desafios pessoais de páginas por semana;
 - metas mensais de leitura;
 - acompanhamento de streaks;
-- rankings amigáveis entre membros do servidor.
+- rankings mensais amigáveis entre membros do servidor.
 
 ## Estrutura do projeto
 
