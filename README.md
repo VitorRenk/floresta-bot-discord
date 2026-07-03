@@ -4,11 +4,13 @@ TokoBot é um bot para Discord que transforma páginas lidas em uma floresta vis
 
 ## Exemplo
 
-Esta é uma simulação de uma floresta com **525 páginas lidas no período**:
+Esta é uma simulação de uma floresta com **500 páginas lidas no período**:
 
-![Floresta com 525 páginas lidas](assets/readme/forest-525.png)
+<p align="center">
+  <img src="assets/readme/forest-500.png" alt="Floresta com 500 páginas lidas" width="520">
+</p>
 
-Com 525 páginas no período, o usuário tem **10 árvores completas** e mais **25 páginas de progresso** para a próxima árvore.
+Com 500 páginas no período, o usuário tem **10 árvores completas**, sem árvore parcial.
 
 ## Funcionalidades
 
