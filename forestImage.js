@@ -3,6 +3,8 @@ const sharp = require("sharp");
 
 const TREE_PAGE_GOAL = 50;
 const IMAGE_SIZE = 1024;
+const VIEWPORT_CROP_SIZE = 880;
+const VIEWPORT_CROP_OFFSET = Math.round((IMAGE_SIZE - VIEWPORT_CROP_SIZE) / 2);
 const ASSET_DIR = path.join(__dirname, "assets", "forest");
 const ISLAND_LEFT = 62;
 const ISLAND_TOP = 162;
@@ -71,6 +73,13 @@ async function generateForestImage(pages, userId = "default") {
       { input: SPRITES.island, left: ISLAND_LEFT, top: ISLAND_TOP },
       ...plants,
     ])
+    .extract({
+      left: VIEWPORT_CROP_OFFSET,
+      top: VIEWPORT_CROP_OFFSET,
+      width: VIEWPORT_CROP_SIZE,
+      height: VIEWPORT_CROP_SIZE,
+    })
+    .resize(IMAGE_SIZE, IMAGE_SIZE)
     .png()
     .toBuffer();
 }
