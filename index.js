@@ -36,9 +36,9 @@ function formatForestProgress(progress) {
   return `Próxima árvore: ${progress.remainingPages}/${TREE_PAGE_GOAL} páginas (${progress.nextTreeProgress}%)`;
 }
 
-async function criarRespostaFloresta(user, nome) {
+async function criarRespostaFloresta(user, nome, userId) {
   const progress = getForestProgress(user.paginas);
-  const image = await generateForestImage(user.paginas);
+  const image = await generateForestImage(user.paginas, userId);
   const attachment = new AttachmentBuilder(image, { name: "floresta.png" });
 
   const embed = new EmbedBuilder()
@@ -125,7 +125,7 @@ client.on("messageCreate", async (message) => {
 
   if (conteudo === "!floresta") {
     const user = await getLeitor(userId, nome);
-    return message.reply(await criarRespostaFloresta(user, nome));
+    return message.reply(await criarRespostaFloresta(user, nome, userId));
   }
 
   if (conteudo === "!resetar") {

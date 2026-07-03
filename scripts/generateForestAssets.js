@@ -101,36 +101,31 @@ function fullTreeSvg() {
   return `
 <svg width="220" height="270" viewBox="0 0 220 270" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="trunk" x1="110" y1="142" x2="110" y2="235" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#9e661c"/>
-      <stop offset="1" stop-color="#744713"/>
+    <linearGradient id="appleTrunk" x1="110" y1="124" x2="110" y2="238" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#a66a28"/>
+      <stop offset="1" stop-color="#704516"/>
     </linearGradient>
-    <linearGradient id="leaf1" x1="110" y1="10" x2="110" y2="108" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#b5ef45"/>
-      <stop offset="1" stop-color="#6fbd24"/>
-    </linearGradient>
-    <linearGradient id="leaf2" x1="110" y1="70" x2="110" y2="170" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#8ed937"/>
-      <stop offset="1" stop-color="#3f9e20"/>
-    </linearGradient>
-    <linearGradient id="leaf3" x1="110" y1="126" x2="110" y2="228" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#67c42f"/>
-      <stop offset="1" stop-color="#21841d"/>
+    <linearGradient id="appleLeaf" x1="110" y1="52" x2="110" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#a9e84f"/>
+      <stop offset="1" stop-color="#2f8f2c"/>
     </linearGradient>
   </defs>
-  <ellipse cx="110" cy="238" rx="54" ry="18" fill="#123c2a" opacity="0.26"/>
-  <rect x="96" y="123" width="28" height="112" rx="8" fill="url(#trunk)"/>
-  <path d="M101 128H124V144C115 150 105 149 96 142Z" fill="#6f4312" opacity="0.34"/>
-  <path d="M110 118L184 192L142 216H78L36 192Z" fill="url(#leaf3)"/>
-  <path d="M110 73L170 143L135 164H85L50 143Z" fill="url(#leaf2)"/>
-  <path d="M110 24L152 84L128 101H92L68 84Z" fill="url(#leaf1)"/>
-  <path d="M110 118L184 192L123 180Z" fill="#8bdd3e" opacity="0.22"/>
-  <path d="M110 73L170 143L122 132Z" fill="#b3ef45" opacity="0.26"/>
-  <path d="M110 24L152 84L118 79Z" fill="#d6ff58" opacity="0.3"/>
-  <path d="M36 192L78 216H142L184 192L142 228H78Z" fill="#217719" opacity="0.18"/>
-  <path d="M50 143L85 164H135L170 143L135 176H85Z" fill="#2d841b" opacity="0.18"/>
-  <rect x="98" y="207" width="24" height="32" rx="7" fill="url(#trunk)"/>
-  <path d="M101 210H121V222C114 226 106 226 99 221Z" fill="#b97820" opacity="0.4"/>
+  <ellipse cx="110" cy="238" rx="55" ry="18" fill="#123c2a" opacity="0.25"/>
+  <rect x="96" y="126" width="28" height="112" rx="8" fill="url(#appleTrunk)"/>
+  <path d="M110 165C92 152 79 141 64 126" stroke="#7a4a17" stroke-width="11" stroke-linecap="round"/>
+  <path d="M111 164C129 150 141 138 155 122" stroke="#7a4a17" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="75" cy="135" r="42" fill="#63b93b"/>
+  <circle cx="110" cy="104" r="54" fill="#99dc49"/>
+  <circle cx="148" cy="134" r="42" fill="#5fb43a"/>
+  <circle cx="108" cy="159" r="56" fill="url(#appleLeaf)"/>
+  <path d="M83 116C97 78 126 66 151 84C122 80 101 94 83 116Z" fill="#c7f65b" opacity="0.28"/>
+  <path d="M63 161C88 200 137 202 162 164C140 183 87 184 63 161Z" fill="#247326" opacity="0.18"/>
+  <circle cx="78" cy="149" r="8" fill="#d9472f"/>
+  <circle cx="125" cy="128" r="8" fill="#e65334"/>
+  <circle cx="145" cy="166" r="7" fill="#c9362a"/>
+  <circle cx="101" cy="184" r="7" fill="#d9472f"/>
+  <rect x="99" y="206" width="23" height="34" rx="7" fill="url(#appleTrunk)"/>
+  <path d="M102 209H121V222C114 226 106 226 100 221Z" fill="#bd7a28" opacity="0.38"/>
 </svg>`;
 }
 
@@ -138,13 +133,17 @@ function youngTreeSvg() {
   return `
 <svg width="190" height="235" viewBox="0 0 190 235" fill="none" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="95" cy="207" rx="44" ry="15" fill="#123c2a" opacity="0.23"/>
-  <rect x="83" y="100" width="24" height="106" rx="7" fill="#8f5a18"/>
-  <path d="M95 81L153 151L120 174H70L37 151Z" fill="#3f9e22"/>
-  <path d="M95 30L138 90L113 108H77L52 90Z" fill="#8bd73a"/>
-  <path d="M95 81L153 151L108 142Z" fill="#86da38" opacity="0.22"/>
-  <path d="M95 30L138 90L104 84Z" fill="#c5f34d" opacity="0.34"/>
-  <path d="M37 151L70 174H120L153 151L120 190H70Z" fill="#237b1b" opacity="0.2"/>
-  <rect x="85" y="174" width="20" height="36" rx="6" fill="#8f5a18"/>
+  <rect x="83" y="104" width="24" height="104" rx="7" fill="#90591c"/>
+  <path d="M95 151C80 140 70 130 59 117" stroke="#784918" stroke-width="9" stroke-linecap="round"/>
+  <path d="M96 151C111 139 121 128 132 114" stroke="#784918" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="67" cy="126" r="34" fill="#66ba3d"/>
+  <circle cx="96" cy="98" r="43" fill="#95d948"/>
+  <circle cx="124" cy="127" r="35" fill="#5fb43a"/>
+  <circle cx="94" cy="146" r="44" fill="#3f9b30"/>
+  <path d="M74 112C86 83 108 74 128 88C105 86 89 96 74 112Z" fill="#c8f55a" opacity="0.3"/>
+  <circle cx="76" cy="143" r="6" fill="#d9472f"/>
+  <circle cx="116" cy="127" r="6" fill="#e65334"/>
+  <rect x="86" y="174" width="19" height="36" rx="6" fill="#90591c"/>
 </svg>`;
 }
 
@@ -152,12 +151,15 @@ function saplingSvg() {
   return `
 <svg width="150" height="190" viewBox="0 0 150 190" fill="none" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="75" cy="164" rx="35" ry="12" fill="#123c2a" opacity="0.2"/>
-  <rect x="67" y="77" width="16" height="88" rx="6" fill="#8f5a18"/>
-  <path d="M75 72L124 132L96 151H54L26 132Z" fill="#3f9e22"/>
-  <path d="M75 31L110 82L90 98H60L40 82Z" fill="#8edc3d"/>
-  <path d="M75 72L124 132L86 124Z" fill="#86da38" opacity="0.22"/>
-  <path d="M75 31L110 82L83 77Z" fill="#c7f653" opacity="0.34"/>
-  <rect x="68" y="143" width="14" height="27" rx="5" fill="#8f5a18"/>
+  <rect x="67" y="80" width="16" height="88" rx="6" fill="#90591c"/>
+  <path d="M75 126C64 117 56 108 49 98" stroke="#784918" stroke-width="7" stroke-linecap="round"/>
+  <path d="M76 126C88 116 95 107 103 96" stroke="#784918" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="56" cy="105" r="26" fill="#66ba3d"/>
+  <circle cx="76" cy="83" r="32" fill="#95d948"/>
+  <circle cx="96" cy="108" r="27" fill="#5fb43a"/>
+  <circle cx="75" cy="126" r="33" fill="#3f9b30"/>
+  <circle cx="88" cy="121" r="5" fill="#d9472f"/>
+  <rect x="68" y="143" width="14" height="27" rx="5" fill="#90591c"/>
 </svg>`;
 }
 
@@ -165,11 +167,11 @@ function sproutSvg() {
   return `
 <svg width="130" height="150" viewBox="0 0 130 150" fill="none" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="65" cy="126" rx="35" ry="11" fill="#123c2a" opacity="0.19"/>
-  <path d="M64 121C64 78 72 57 93 37" stroke="#6e8c25" stroke-width="13" stroke-linecap="round"/>
-  <path d="M63 118C60 86 48 67 28 52" stroke="#6e8c25" stroke-width="11" stroke-linecap="round"/>
-  <ellipse cx="96" cy="35" rx="31" ry="17" fill="#8cda3a" transform="rotate(-22 96 35)"/>
-  <ellipse cx="30" cy="52" rx="28" ry="16" fill="#64bd32" transform="rotate(26 30 52)"/>
-  <ellipse cx="75" cy="72" rx="22" ry="12" fill="#a6eb43" transform="rotate(-28 75 72)"/>
+  <path d="M65 120C64 82 68 59 80 38" stroke="#8c5b21" stroke-width="12" stroke-linecap="round"/>
+  <ellipse cx="43" cy="69" rx="27" ry="16" fill="#65b93d" transform="rotate(24 43 69)"/>
+  <ellipse cx="88" cy="42" rx="30" ry="17" fill="#95d948" transform="rotate(-18 88 42)"/>
+  <ellipse cx="78" cy="82" rx="23" ry="14" fill="#4aa135" transform="rotate(-12 78 82)"/>
+  <circle cx="87" cy="78" r="5" fill="#d9472f"/>
 </svg>`;
 }
 
@@ -177,9 +179,159 @@ function seedSvg() {
   return `
 <svg width="100" height="120" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
   <ellipse cx="50" cy="96" rx="30" ry="10" fill="#123c2a" opacity="0.16"/>
-  <ellipse cx="48" cy="80" rx="18" ry="13" fill="#8f6830"/>
-  <path d="M52 72C60 45 74 34 91 32" stroke="#68b832" stroke-width="8" stroke-linecap="round"/>
-  <ellipse cx="85" cy="30" rx="17" ry="9" fill="#8ddb40" transform="rotate(-20 85 30)"/>
+  <ellipse cx="48" cy="80" rx="17" ry="13" fill="#8f6830"/>
+  <path d="M36 70H60C58 61 53 56 48 56C42 56 38 61 36 70Z" fill="#614016"/>
+  <path d="M54 72C62 50 75 38 90 35" stroke="#65b93d" stroke-width="7" stroke-linecap="round"/>
+  <ellipse cx="87" cy="33" rx="16" ry="9" fill="#95d948" transform="rotate(-18 87 33)"/>
+</svg>`;
+}
+
+function pineFullSvg() {
+  return `
+<svg width="220" height="270" viewBox="0 0 220 270" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="trunk" x1="110" y1="122" x2="110" y2="238" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9c6420"/>
+      <stop offset="1" stop-color="#684015"/>
+    </linearGradient>
+    <linearGradient id="pineA" x1="110" y1="16" x2="110" y2="232" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9ee445"/>
+      <stop offset="1" stop-color="#146f25"/>
+    </linearGradient>
+    <linearGradient id="pineB" x1="110" y1="70" x2="110" y2="230" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#61b937"/>
+      <stop offset="1" stop-color="#0e5f21"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="110" cy="238" rx="52" ry="17" fill="#123c2a" opacity="0.25"/>
+  <rect x="98" y="118" width="24" height="118" rx="7" fill="url(#trunk)"/>
+  <path d="M110 16L145 82L124 94H96L75 82Z" fill="url(#pineA)"/>
+  <path d="M110 58L164 137L132 154H88L56 137Z" fill="url(#pineB)"/>
+  <path d="M110 111L184 204L142 228H78L36 204Z" fill="url(#pineB)"/>
+  <path d="M110 16L145 82L119 76Z" fill="#c7f652" opacity="0.3"/>
+  <path d="M110 58L164 137L121 125Z" fill="#83d440" opacity="0.24"/>
+  <path d="M110 111L184 204L124 188Z" fill="#58bd35" opacity="0.2"/>
+  <rect x="99" y="208" width="22" height="31" rx="7" fill="url(#trunk)"/>
+</svg>`;
+}
+
+function pineYoungSvg() {
+  return `
+<svg width="190" height="235" viewBox="0 0 190 235" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="95" cy="207" rx="43" ry="15" fill="#123c2a" opacity="0.22"/>
+  <rect x="85" y="98" width="20" height="108" rx="7" fill="#855319"/>
+  <path d="M95 28L128 88L109 101H81L62 88Z" fill="#96df44"/>
+  <path d="M95 75L148 151L118 171H72L42 151Z" fill="#2f942d"/>
+  <path d="M95 28L128 88L103 82Z" fill="#c5f44e" opacity="0.3"/>
+  <path d="M95 75L148 151L108 141Z" fill="#70ca3c" opacity="0.22"/>
+  <rect x="87" y="174" width="17" height="36" rx="6" fill="#855319"/>
+</svg>`;
+}
+
+function pineSaplingSvg() {
+  return `
+<svg width="150" height="190" viewBox="0 0 150 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="75" cy="164" rx="34" ry="12" fill="#123c2a" opacity="0.2"/>
+  <rect x="68" y="78" width="14" height="88" rx="6" fill="#855319"/>
+  <path d="M75 33L105 84L88 97H62L45 84Z" fill="#96df44"/>
+  <path d="M75 78L121 139L94 157H56L29 139Z" fill="#2f942d"/>
+  <path d="M75 33L105 84L82 79Z" fill="#c5f44e" opacity="0.32"/>
+  <rect x="69" y="144" width="12" height="26" rx="5" fill="#855319"/>
+</svg>`;
+}
+
+function pineSproutSvg() {
+  return `
+<svg width="130" height="150" viewBox="0 0 130 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="65" cy="126" rx="34" ry="11" fill="#123c2a" opacity="0.18"/>
+  <path d="M65 119C65 83 67 61 74 41" stroke="#76511b" stroke-width="11" stroke-linecap="round"/>
+  <path d="M73 32L98 73H48Z" fill="#86d63d"/>
+  <path d="M73 61L109 110H37Z" fill="#2f942d"/>
+  <path d="M73 32L98 73L78 68Z" fill="#c5f44e" opacity="0.3"/>
+</svg>`;
+}
+
+function pineSeedSvg() {
+  return `
+<svg width="100" height="120" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="50" cy="96" rx="29" ry="10" fill="#123c2a" opacity="0.16"/>
+  <ellipse cx="48" cy="82" rx="16" ry="12" fill="#8a6427"/>
+  <path d="M51 75C54 52 64 39 78 31" stroke="#6dbb32" stroke-width="7" stroke-linecap="round"/>
+  <path d="M78 23L94 49H62Z" fill="#8dda3d"/>
+</svg>`;
+}
+
+function oakFullSvg() {
+  return `
+<svg width="220" height="270" viewBox="0 0 220 270" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="oakTrunk" x1="110" y1="126" x2="110" y2="238" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#a46824"/>
+      <stop offset="1" stop-color="#704416"/>
+    </linearGradient>
+    <linearGradient id="oakLeaf" x1="110" y1="42" x2="110" y2="218" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#a9e34a"/>
+      <stop offset="1" stop-color="#2f8a2b"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="110" cy="238" rx="55" ry="18" fill="#123c2a" opacity="0.25"/>
+  <rect x="96" y="126" width="28" height="112" rx="8" fill="url(#oakTrunk)"/>
+  <circle cx="76" cy="136" r="44" fill="#5fb43b"/>
+  <circle cx="110" cy="104" r="55" fill="#8bd342"/>
+  <circle cx="148" cy="137" r="45" fill="#62b63b"/>
+  <circle cx="108" cy="158" r="57" fill="url(#oakLeaf)"/>
+  <path d="M82 115C95 76 124 64 150 83C122 78 101 93 82 115Z" fill="#c6f254" opacity="0.28"/>
+  <path d="M63 161C87 199 139 202 163 162C142 183 86 184 63 161Z" fill="#247326" opacity="0.18"/>
+  <rect x="99" y="206" width="23" height="34" rx="7" fill="url(#oakTrunk)"/>
+</svg>`;
+}
+
+function oakYoungSvg() {
+  return `
+<svg width="190" height="235" viewBox="0 0 190 235" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="95" cy="207" rx="44" ry="15" fill="#123c2a" opacity="0.22"/>
+  <rect x="84" y="104" width="23" height="104" rx="7" fill="#90591c"/>
+  <circle cx="68" cy="125" r="34" fill="#65b93d"/>
+  <circle cx="95" cy="96" r="43" fill="#8bd342"/>
+  <circle cx="124" cy="126" r="35" fill="#62b63b"/>
+  <circle cx="94" cy="146" r="44" fill="#3f992f"/>
+  <path d="M73 111C85 82 107 73 128 88C105 86 88 95 73 111Z" fill="#c6f254" opacity="0.3"/>
+  <rect x="86" y="174" width="19" height="36" rx="6" fill="#90591c"/>
+</svg>`;
+}
+
+function oakSaplingSvg() {
+  return `
+<svg width="150" height="190" viewBox="0 0 150 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="75" cy="164" rx="34" ry="12" fill="#123c2a" opacity="0.2"/>
+  <rect x="67" y="80" width="16" height="88" rx="6" fill="#90591c"/>
+  <circle cx="57" cy="104" r="27" fill="#65b93d"/>
+  <circle cx="77" cy="82" r="33" fill="#8bd342"/>
+  <circle cx="96" cy="109" r="28" fill="#4aa135"/>
+  <circle cx="75" cy="126" r="34" fill="#3f992f"/>
+  <rect x="68" y="143" width="14" height="27" rx="5" fill="#90591c"/>
+</svg>`;
+}
+
+function oakSproutSvg() {
+  return `
+<svg width="130" height="150" viewBox="0 0 130 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="65" cy="126" rx="34" ry="11" fill="#123c2a" opacity="0.18"/>
+  <path d="M65 120C64 82 66 60 78 39" stroke="#8c5b21" stroke-width="12" stroke-linecap="round"/>
+  <ellipse cx="43" cy="68" rx="27" ry="16" fill="#65b93d" transform="rotate(24 43 68)"/>
+  <ellipse cx="86" cy="43" rx="29" ry="17" fill="#8bd342" transform="rotate(-19 86 43)"/>
+  <ellipse cx="78" cy="82" rx="23" ry="14" fill="#4aa135" transform="rotate(-12 78 82)"/>
+</svg>`;
+}
+
+function oakSeedSvg() {
+  return `
+<svg width="100" height="120" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="50" cy="96" rx="29" ry="10" fill="#123c2a" opacity="0.16"/>
+  <ellipse cx="48" cy="80" rx="17" ry="13" fill="#8f6830"/>
+  <path d="M36 70H60C58 61 53 56 48 56C42 56 38 61 36 70Z" fill="#614016"/>
+  <path d="M54 72C62 50 75 38 90 35" stroke="#65b93d" stroke-width="7" stroke-linecap="round"/>
+  <ellipse cx="87" cy="33" rx="16" ry="9" fill="#8bd342" transform="rotate(-18 87 33)"/>
 </svg>`;
 }
 
@@ -190,6 +342,16 @@ async function main() {
   await writePng("tree-sapling.png", saplingSvg());
   await writePng("tree-sprout.png", sproutSvg());
   await writePng("tree-seed.png", seedSvg());
+  await writePng("pine-full.png", pineFullSvg());
+  await writePng("pine-young.png", pineYoungSvg());
+  await writePng("pine-sapling.png", pineSaplingSvg());
+  await writePng("pine-sprout.png", pineSproutSvg());
+  await writePng("pine-seed.png", pineSeedSvg());
+  await writePng("oak-full.png", oakFullSvg());
+  await writePng("oak-young.png", oakYoungSvg());
+  await writePng("oak-sapling.png", oakSaplingSvg());
+  await writePng("oak-sprout.png", oakSproutSvg());
+  await writePng("oak-seed.png", oakSeedSvg());
 }
 
 main().catch((error) => {

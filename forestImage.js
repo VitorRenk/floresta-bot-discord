@@ -9,15 +9,34 @@ const ISLAND_TOP = 162;
 
 const SPRITES = {
   island: path.join(ASSET_DIR, "island.png"),
-  full: path.join(ASSET_DIR, "tree-full.png"),
-  seed: path.join(ASSET_DIR, "tree-seed.png"),
-  sprout: path.join(ASSET_DIR, "tree-sprout.png"),
-  sapling: path.join(ASSET_DIR, "tree-sapling.png"),
-  young: path.join(ASSET_DIR, "tree-young.png"),
+  trees: {
+    default: {
+      full: path.join(ASSET_DIR, "tree-full.png"),
+      seed: path.join(ASSET_DIR, "tree-seed.png"),
+      sprout: path.join(ASSET_DIR, "tree-sprout.png"),
+      sapling: path.join(ASSET_DIR, "tree-sapling.png"),
+      young: path.join(ASSET_DIR, "tree-young.png"),
+    },
+    pine: {
+      full: path.join(ASSET_DIR, "pine-full.png"),
+      seed: path.join(ASSET_DIR, "pine-seed.png"),
+      sprout: path.join(ASSET_DIR, "pine-sprout.png"),
+      sapling: path.join(ASSET_DIR, "pine-sapling.png"),
+      young: path.join(ASSET_DIR, "pine-young.png"),
+    },
+    oak: {
+      full: path.join(ASSET_DIR, "oak-full.png"),
+      seed: path.join(ASSET_DIR, "oak-seed.png"),
+      sprout: path.join(ASSET_DIR, "oak-sprout.png"),
+      sapling: path.join(ASSET_DIR, "oak-sapling.png"),
+      young: path.join(ASSET_DIR, "oak-young.png"),
+    },
+  },
 };
 
 const GRID_DIVISIONS = 6;
 const PLANT_POINTS = createPlantPoints();
+const TREE_TYPES = ["default", "pine", "oak"];
 
 function getForestProgress(pages) {
   const safePages = Math.max(0, Number(pages) || 0);
@@ -42,10 +61,10 @@ function getPartialStage(remainingPages) {
   return "young";
 }
 
-async function generateForestImage(pages) {
+async function generateForestImage(pages, userId = "default") {
   const progress = getForestProgress(pages);
   const background = Buffer.from(getBackgroundSvg());
-  const plants = await getPlantComposites(progress);
+  const plants = await getPlantComposites(progress, userId);
 
   return sharp(background)
     .composite([
@@ -56,7 +75,7 @@ async function generateForestImage(pages) {
     .toBuffer();
 }
 
-async function getPlantComposites(progress) {
+async function getPlantComposites(progress, userId) {
   const hasPartial = Boolean(progress.partialStage);
   const maxCompleteTrees = hasPartial
     ? PLANT_POINTS.length - 1
@@ -65,13 +84,21 @@ async function getPlantComposites(progress) {
   const composites = [];
 
   for (let index = 0; index < completeTrees; index += 1) {
-    composites.push(await createPlantComposite(SPRITES.full, PLANT_POINTS[index], index));
+    const treeType = getTreeType(userId, index);
+    composites.push(
+      await createPlantComposite(
+        SPRITES.trees[treeType].full,
+        PLANT_POINTS[index],
+        index,
+      ),
+    );
   }
 
   if (hasPartial && completeTrees < PLANT_POINTS.length) {
+    const treeType = getTreeType(userId, completeTrees);
     composites.push(
       await createPlantComposite(
-        SPRITES[progress.partialStage],
+        SPRITES.trees[treeType][progress.partialStage],
         PLANT_POINTS[completeTrees],
         completeTrees,
         getStageScale(progress.partialStage),
@@ -103,6 +130,22 @@ function getStageScale(stage) {
     young: 0.86,
   };
   return scales[stage] || 1;
+}
+
+function getTreeType(userId, index) {
+  const hash = hashString(`${userId}:${index}`);
+  return TREE_TYPES[hash % TREE_TYPES.length];
+}
+
+function hashString(value) {
+  let hash = 2166136261;
+
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
 }
 
 function createPlantPoints() {
