@@ -52,7 +52,7 @@ O comando antigo `!floresta` foi substituído pelas versões de semana e mês. S
 
 ## Badges de streak
 
-As badges aparecem no `!perfil` conforme o usuário mantém dias consecutivos de leitura:
+As badges aparecem no `!perfil` conforme o usuário mantém dias consecutivos de leitura. Quando uma nova badge é desbloqueada, o bot também avisa na resposta do `!li`.
 
 - 3 dias: 🌱 Constância Inicial
 - 7 dias: 🔥 Semana Perfeita

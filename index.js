@@ -110,6 +110,12 @@ function formatStreakBadges(streak) {
   return unlockedBadges.map((badge) => badge.label).join("\n");
 }
 
+function getUnlockedStreakBadge(previousStreak, currentStreak) {
+  return STREAK_BADGES.find(
+    (badge) => previousStreak < badge.days && currentStreak >= badge.days,
+  );
+}
+
 async function criarRespostaFlorestaPeriodo(user, nome, userId, periodo, tipo) {
   const paginas = await getPaginasPeriodo(userId, periodo.start, periodo.end);
   const progress = getForestProgress(paginas);
@@ -166,6 +172,7 @@ client.on("messageCreate", async (message) => {
 
     const user = await getLeitor(userId, nome);
     let { paginas, streak, ultimo_dia } = user;
+    const streakAnterior = streak;
 
     const ontem = addDaysToDateString(hoje, -1);
 
@@ -185,6 +192,7 @@ client.on("messageCreate", async (message) => {
     await registrarPaginasDia(userId, hoje, paginasNovas);
 
     const progress = getForestProgress(paginas);
+    const badgeDesbloqueada = getUnlockedStreakBadge(streakAnterior, streak);
     const embed = new EmbedBuilder()
       .setColor(0x2d6a4f)
       .setTitle(`🌿 ${nome} leu ${paginasNovas} páginas hoje!`)
@@ -200,6 +208,14 @@ client.on("messageCreate", async (message) => {
         },
         { name: "🔥 Streak", value: `${streak} dia(s)`, inline: true },
       );
+
+    if (badgeDesbloqueada) {
+      embed.addFields({
+        name: "🏅 Nova badge desbloqueada!",
+        value: badgeDesbloqueada.label,
+        inline: false,
+      });
+    }
 
     return message.reply({ embeds: [embed] });
   }
