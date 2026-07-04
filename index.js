@@ -16,6 +16,7 @@ const {
   atualizarLeitor,
   registrarPaginasDia,
   getPaginasPeriodo,
+  corrigirPaginasDia,
   resetarPaginasLeitor,
   getRankingMensal,
 } = require("./db");
@@ -178,6 +179,58 @@ client.on("messageCreate", async (message) => {
     return message.reply({ embeds: [embed] });
   }
 
+  if (conteudo.startsWith("!corrigir ")) {
+    const partes = conteudo.split(" ");
+    const delta = parseInt(partes[1]);
+
+    if (!/^[+-]?\d+$/.test(partes[1] || "") || delta === 0) {
+      return message.reply(
+        "❌ Use assim: `!corrigir -10` ou `!corrigir 10`.",
+      );
+    }
+
+    await getLeitor(userId, nome);
+    const resultado = await corrigirPaginasDia(userId, hoje, delta);
+
+    if (!resultado.found) {
+      return message.reply(
+        "Use `!li [páginas]` para registrar sua leitura de hoje primeiro.",
+      );
+    }
+
+    const embed = new EmbedBuilder()
+      .setColor(0x2d6a4f)
+      .setTitle(`Correção de leitura de ${nome}`)
+      .setDescription("Sua leitura de hoje foi corrigida.")
+      .addFields(
+        {
+          name: "Correção solicitada",
+          value: `${delta > 0 ? "+" : ""}${delta}`,
+          inline: true,
+        },
+        {
+          name: "Correção aplicada",
+          value: `${resultado.deltaAplicado > 0 ? "+" : ""}${resultado.deltaAplicado}`,
+          inline: true,
+        },
+        {
+          name: "Páginas de hoje",
+          value: `${resultado.paginasAntes} → ${resultado.paginasDepois}`,
+          inline: true,
+        },
+        {
+          name: "Total acumulado",
+          value: `${resultado.totalPaginas}`,
+          inline: true,
+        },
+      )
+      .setFooter({
+        text: "Seu streak e seu último dia lido foram preservados.",
+      });
+
+    return message.reply({ embeds: [embed] });
+  }
+
   if (conteudo === "!floresta-semana") {
     const user = await getLeitor(userId, nome);
     const periodo = getWeekPeriod(hoje);
@@ -260,6 +313,10 @@ client.on("messageCreate", async (message) => {
         {
           name: "!li [páginas]",
           value: "Registra páginas lidas hoje. Ex: `!li 30`",
+        },
+        {
+          name: "!corrigir [ajuste]",
+          value: "Corrige a leitura de hoje. Ex: `!corrigir -10`",
         },
         {
           name: "!floresta-semana",

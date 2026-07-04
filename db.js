@@ -89,6 +89,67 @@ async function getPaginasPeriodo(userId, dataInicio, dataFim) {
   return res.rows[0].paginas;
 }
 
+async function corrigirPaginasDia(userId, data, delta) {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const leituraRes = await client.query(
+      `
+      SELECT paginas
+      FROM leituras_diarias
+      WHERE user_id = $1 AND data = $2
+      FOR UPDATE
+    `,
+      [userId, data],
+    );
+
+    if (leituraRes.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return { found: false };
+    }
+
+    const paginasAntes = leituraRes.rows[0].paginas;
+    const paginasDepois = Math.max(0, paginasAntes + delta);
+    const deltaAplicado = paginasDepois - paginasAntes;
+
+    await client.query(
+      `
+      UPDATE leituras_diarias
+      SET paginas = $1
+      WHERE user_id = $2 AND data = $3
+    `,
+      [paginasDepois, userId, data],
+    );
+
+    const totalRes = await client.query(
+      `
+      UPDATE leitores
+      SET paginas = GREATEST(0, paginas + $1)
+      WHERE user_id = $2
+      RETURNING paginas
+    `,
+      [deltaAplicado, userId],
+    );
+
+    await client.query("COMMIT");
+
+    return {
+      found: true,
+      paginasAntes,
+      paginasDepois,
+      deltaAplicado,
+      totalPaginas: totalRes.rows[0]?.paginas ?? 0,
+    };
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
 async function resetarPaginasLeitor(userId) {
   await pool.query("UPDATE leitores SET paginas = 0 WHERE user_id = $1", [
     userId,
@@ -126,6 +187,7 @@ module.exports = {
   atualizarLeitor,
   registrarPaginasDia,
   getPaginasPeriodo,
+  corrigirPaginasDia,
   resetarPaginasLeitor,
   getRankingMensal,
 };

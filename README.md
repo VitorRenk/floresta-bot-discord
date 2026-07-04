@@ -15,6 +15,7 @@ Com 500 páginas no período, o usuário tem **10 árvores completas**, sem árv
 ## Funcionalidades
 
 - Registro diário de páginas lidas com `!li`.
+- Correção da leitura registrada no dia atual com `!corrigir`.
 - Floresta visual semanal com `!floresta-semana`.
 - Floresta visual mensal com `!floresta-mes`.
 - Ranking mensal dos leitores com mais páginas no mês atual.
@@ -38,6 +39,7 @@ Com 500 páginas no período, o usuário tem **10 árvores completas**, sem árv
 | Comando | Descrição |
 | --- | --- |
 | `!li [páginas]` | Registra páginas lidas hoje. Exemplo: `!li 30` |
+| `!corrigir [ajuste]` | Corrige páginas registradas hoje. Exemplo: `!corrigir -10` |
 | `!floresta-semana` | Mostra sua floresta da semana atual, de domingo a sábado |
 | `!floresta-mes` | Mostra sua floresta do mês atual |
 | `!ranking` | Exibe os 5 leitores com mais páginas no mês atual |
