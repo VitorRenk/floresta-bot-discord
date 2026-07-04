@@ -18,7 +18,7 @@ Com 500 páginas no período, o usuário tem **10 árvores completas**, sem árv
 - Correção da leitura registrada no dia atual com `!corrigir`.
 - Floresta visual semanal com `!floresta-semana`.
 - Floresta visual mensal com `!floresta-mes`.
-- Perfil individual com total acumulado, semana, mês, streak, melhor mês e ranking mensal.
+- Perfil individual com total acumulado, semana, mês, streak, badges, melhor mês e ranking mensal.
 - Ranking mensal dos leitores com mais páginas no mês atual.
 - Reset individual de páginas com preservação de streak e último dia lido.
 - Imagens PNG geradas dinamicamente com `sharp` e enviadas no Discord como anexo do embed.
@@ -49,6 +49,17 @@ Com 500 páginas no período, o usuário tem **10 árvores completas**, sem árv
 | `!ajuda` | Mostra os comandos disponíveis |
 
 O comando antigo `!floresta` foi substituído pelas versões de semana e mês. Se usado, ele apenas orienta o usuário para `!floresta-semana` e `!floresta-mes`.
+
+## Badges de streak
+
+As badges aparecem no `!perfil` conforme o usuário mantém dias consecutivos de leitura:
+
+- 3 dias: 🌱 Constância Inicial
+- 7 dias: 🔥 Semana Perfeita
+- 14 dias: 🌿 Ritmo Forte
+- 30 dias: 🌳 Hábito Enraizado
+- 60 dias: 🏕️ Leitor Persistente
+- 100 dias: 🏔️ Lenda da Floresta
 
 ## Uso para produtividade
 

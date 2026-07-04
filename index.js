@@ -32,6 +32,14 @@ const client = new Client({
 });
 
 const BOT_TIME_ZONE = "America/Sao_Paulo";
+const STREAK_BADGES = [
+  { days: 3, label: "🌱 Constância Inicial" },
+  { days: 7, label: "🔥 Semana Perfeita" },
+  { days: 14, label: "🌿 Ritmo Forte" },
+  { days: 30, label: "🌳 Hábito Enraizado" },
+  { days: 60, label: "🏕️ Leitor Persistente" },
+  { days: 100, label: "🏔️ Lenda da Floresta" },
+];
 
 function getTodayDateString() {
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -90,6 +98,16 @@ function formatForestProgress(progress) {
   }
 
   return `Próxima árvore: ${progress.remainingPages}/${TREE_PAGE_GOAL} páginas (${progress.nextTreeProgress}%)`;
+}
+
+function formatStreakBadges(streak) {
+  const unlockedBadges = STREAK_BADGES.filter((badge) => streak >= badge.days);
+
+  if (unlockedBadges.length === 0) {
+    return "Nenhuma ainda. Alcance 3 dias de streak para ganhar a primeira.";
+  }
+
+  return unlockedBadges.map((badge) => badge.label).join("\n");
 }
 
 async function criarRespostaFlorestaPeriodo(user, nome, userId, periodo, tipo) {
@@ -304,6 +322,7 @@ client.on("messageCreate", async (message) => {
     const rankingTexto = posicaoRanking
       ? `#${posicaoRanking.posicao} (${posicaoRanking.paginas} páginas)`
       : "Sem posição neste mês";
+    const badgesTexto = formatStreakBadges(user.streak);
 
     const embed = new EmbedBuilder()
       .setColor(0x2d6a4f)
@@ -328,6 +347,7 @@ client.on("messageCreate", async (message) => {
         { name: "Último dia lido", value: ultimoDia, inline: true },
         { name: "Melhor mês", value: melhorMesTexto, inline: true },
         { name: "Ranking mensal", value: rankingTexto, inline: false },
+        { name: "Badges de streak", value: badgesTexto, inline: false },
       )
       .setFooter({
         text: `Semana: ${formatDateBR(periodoSemana.start)} a ${formatDateBR(periodoSemana.end)} | Mês: ${formatDateBR(periodoMes.start)} a ${formatDateBR(periodoMes.end)}`,
