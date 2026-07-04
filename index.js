@@ -19,6 +19,8 @@ const {
   corrigirPaginasDia,
   resetarPaginasLeitor,
   getRankingMensal,
+  getMelhorMes,
+  getPosicaoRankingMensal,
 } = require("./db");
 
 const client = new Client({
@@ -73,6 +75,11 @@ function getMonthPeriod(dateString) {
 function formatDateBR(dateString) {
   const [year, month, day] = dateString.split("-");
   return `${day}/${month}/${year}`;
+}
+
+function formatMonthBR(monthString) {
+  const [year, month] = monthString.split("-");
+  return `${month}/${year}`;
 }
 
 function formatForestProgress(progress) {
@@ -277,6 +284,58 @@ client.on("messageCreate", async (message) => {
     return message.reply({ embeds: [embed] });
   }
 
+  if (conteudo === "!perfil") {
+    const user = await getLeitor(userId, nome);
+    const periodoSemana = getWeekPeriod(hoje);
+    const periodoMes = getMonthPeriod(hoje);
+    const [paginasSemana, paginasMes, melhorMes, posicaoRanking] =
+      await Promise.all([
+        getPaginasPeriodo(userId, periodoSemana.start, periodoSemana.end),
+        getPaginasPeriodo(userId, periodoMes.start, periodoMes.end),
+        getMelhorMes(userId),
+        getPosicaoRankingMensal(userId, periodoMes.start, periodoMes.end),
+      ]);
+    const ultimoDia = user.ultimo_dia
+      ? formatDateBR(user.ultimo_dia)
+      : "Ainda não registrado";
+    const melhorMesTexto = melhorMes
+      ? `${formatMonthBR(melhorMes.mes)} (${melhorMes.paginas} páginas)`
+      : "Ainda sem registros";
+    const rankingTexto = posicaoRanking
+      ? `#${posicaoRanking.posicao} (${posicaoRanking.paginas} páginas)`
+      : "Sem posição neste mês";
+
+    const embed = new EmbedBuilder()
+      .setColor(0x2d6a4f)
+      .setTitle(`Perfil de leitura de ${nome}`)
+      .addFields(
+        {
+          name: "Total acumulado",
+          value: `${user.paginas} páginas`,
+          inline: true,
+        },
+        {
+          name: "Semana atual",
+          value: `${paginasSemana} páginas`,
+          inline: true,
+        },
+        {
+          name: "Mês atual",
+          value: `${paginasMes} páginas`,
+          inline: true,
+        },
+        { name: "Streak", value: `${user.streak} dia(s)`, inline: true },
+        { name: "Último dia lido", value: ultimoDia, inline: true },
+        { name: "Melhor mês", value: melhorMesTexto, inline: true },
+        { name: "Ranking mensal", value: rankingTexto, inline: false },
+      )
+      .setFooter({
+        text: `Semana: ${formatDateBR(periodoSemana.start)} a ${formatDateBR(periodoSemana.end)} | Mês: ${formatDateBR(periodoMes.start)} a ${formatDateBR(periodoMes.end)}`,
+      });
+
+    return message.reply({ embeds: [embed] });
+  }
+
   if (conteudo === "!ranking") {
     const periodo = getMonthPeriod(hoje);
     const ranking = await getRankingMensal(periodo.start, periodo.end);
@@ -325,6 +384,10 @@ client.on("messageCreate", async (message) => {
         {
           name: "!floresta-mes",
           value: "Mostra sua floresta do mês atual",
+        },
+        {
+          name: "!perfil",
+          value: "Mostra seu resumo de leitura e posição mensal",
         },
         {
           name: "!resetar",

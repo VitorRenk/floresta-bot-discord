@@ -18,6 +18,7 @@ Com 500 páginas no período, o usuário tem **10 árvores completas**, sem árv
 - Correção da leitura registrada no dia atual com `!corrigir`.
 - Floresta visual semanal com `!floresta-semana`.
 - Floresta visual mensal com `!floresta-mes`.
+- Perfil individual com total acumulado, semana, mês, streak, melhor mês e ranking mensal.
 - Ranking mensal dos leitores com mais páginas no mês atual.
 - Reset individual de páginas com preservação de streak e último dia lido.
 - Imagens PNG geradas dinamicamente com `sharp` e enviadas no Discord como anexo do embed.
@@ -42,6 +43,7 @@ Com 500 páginas no período, o usuário tem **10 árvores completas**, sem árv
 | `!corrigir [ajuste]` | Corrige páginas registradas hoje. Exemplo: `!corrigir -10` |
 | `!floresta-semana` | Mostra sua floresta da semana atual, de domingo a sábado |
 | `!floresta-mes` | Mostra sua floresta do mês atual |
+| `!perfil` | Mostra seu resumo de leitura e posição no ranking mensal |
 | `!ranking` | Exibe os 5 leitores com mais páginas no mês atual |
 | `!resetar` | Zera suas páginas e histórico diário, sem alterar streak e último dia lido |
 | `!ajuda` | Mostra os comandos disponíveis |

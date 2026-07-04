@@ -181,6 +181,51 @@ async function getRankingMensal(dataInicio, dataFim) {
   return res.rows;
 }
 
+async function getMelhorMes(userId) {
+  const res = await pool.query(
+    `
+    SELECT
+      SUBSTRING(data FROM 1 FOR 7) AS mes,
+      COALESCE(SUM(paginas), 0)::INTEGER AS paginas
+    FROM leituras_diarias
+    WHERE user_id = $1
+    GROUP BY mes
+    HAVING COALESCE(SUM(paginas), 0) > 0
+    ORDER BY paginas DESC, mes DESC
+    LIMIT 1
+  `,
+    [userId],
+  );
+
+  return res.rows[0] || null;
+}
+
+async function getPosicaoRankingMensal(userId, dataInicio, dataFim) {
+  const res = await pool.query(
+    `
+    WITH ranking AS (
+      SELECT
+        user_id,
+        COALESCE(SUM(paginas), 0)::INTEGER AS paginas,
+        RANK() OVER (
+          ORDER BY COALESCE(SUM(paginas), 0) DESC
+        ) AS posicao
+      FROM leituras_diarias
+      WHERE data >= $1
+        AND data <= $2
+      GROUP BY user_id
+      HAVING COALESCE(SUM(paginas), 0) > 0
+    )
+    SELECT posicao, paginas
+    FROM ranking
+    WHERE user_id = $3
+  `,
+    [dataInicio, dataFim, userId],
+  );
+
+  return res.rows[0] || null;
+}
+
 module.exports = {
   inicializarDB,
   getLeitor,
@@ -190,4 +235,6 @@ module.exports = {
   corrigirPaginasDia,
   resetarPaginasLeitor,
   getRankingMensal,
+  getMelhorMes,
+  getPosicaoRankingMensal,
 };
