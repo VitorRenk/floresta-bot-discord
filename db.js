@@ -1,16 +1,32 @@
 const { Pool } = require("pg");
 
-console.log(
-  "DATABASE_URL:",
-  process.env.DATABASE_URL ? "EXISTE" : "NAO EXISTE",
+const hasDatabaseUrl = Boolean(process.env.DATABASE_URL);
+const useSsl =
+  process.env.DB_SSL === "true" ||
+  (hasDatabaseUrl && process.env.DB_SSL !== "false");
+
+const pool = new Pool(
+  hasDatabaseUrl
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: useSsl ? { rejectUnauthorized: false } : false,
+      }
+    : {
+        host: process.env.DB_HOST || "localhost",
+        port: Number(process.env.DB_PORT || 5432),
+        database: process.env.DB_NAME,
+        user: process.env.DB_USER || "postgres",
+        password: process.env.DB_PASSWORD,
+        ssl: useSsl ? { rejectUnauthorized: false } : false,
+      },
 );
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
+console.log(
+  "Banco:",
+  hasDatabaseUrl
+    ? "DATABASE_URL"
+    : `${process.env.DB_HOST || "localhost"}:${process.env.DB_PORT || 5432}/${process.env.DB_NAME || ""}`,
+);
 
 async function inicializarDB() {
   await pool.query(`

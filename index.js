@@ -152,7 +152,7 @@ client.on("clientReady", async () => {
   console.log(`✅ TokoBot online como ${client.user.tag}`);
 });
 
-client.on("messageCreate", async (message) => {
+async function handleMessageCreate(message) {
   if (message.author.bot) return;
 
   const conteudo = message.content.trim().toLowerCase();
@@ -435,6 +435,25 @@ client.on("messageCreate", async (message) => {
 
     return message.reply({ embeds: [embed] });
   }
+}
+
+client.on("messageCreate", async (message) => {
+  try {
+    await handleMessageCreate(message);
+  } catch (error) {
+    console.error("Erro ao executar comando:", error);
+
+    if (!message.replied) {
+      await message.reply(
+        "Nao consegui executar esse comando agora. Verifiquei o erro no console do bot.",
+      );
+    }
+  }
 });
+
+if (!process.env.TOKEN) {
+  console.error("TOKEN nao configurado no .env.");
+  process.exit(1);
+}
 
 client.login(process.env.TOKEN);
